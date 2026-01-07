@@ -20,7 +20,7 @@ const CONFIG = {
   blog: {
     title: "kimwest의 개발개발",
     description: "welcome to morethan-log!",
-    scheme: 'light' | 'dark' | 'system'
+    scheme: 'dark'
   },
 
   // CONFIG configration (required)
