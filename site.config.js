@@ -11,10 +11,10 @@ const CONFIG = {
     instagram: "devkimwest00",
   },
   projects: [
-//    {
-//      name: `morethan-log`,
-//      href: "https://github.com/morethanmin/morethan-log",
-//    },
+    {
+      name: `객체탐지 AI를 활용한 쓰레기 배출 안내 서비스, Wiz`,
+      href: "https://github.com/kimwest00/Ibaji-App",
+    },
   ],
   // blog setting (required)
   blog: {
