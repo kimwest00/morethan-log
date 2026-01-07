@@ -26,7 +26,7 @@ const CONFIG = {
   // CONFIG configration (required)
   link: "https://kimwest-vlog.vercel.app",
   since: 2026, // If leave this empty, current year will be used.
-  lang:  ['en-US', 'ko-KR'], //'zh-CN', 'zh-HK', 'zh-TW', 'ja-JP', 'es-ES',
+  lang:  'ko-KR', //'zh-CN', 'zh-HK', 'zh-TW', 'ja-JP', 'es-ES',
   ogImageGenerateURL: "https://og-image-korean.vercel.app", // The link to generate OG image, don't end with a slash
 
   // notion configuration (required)
