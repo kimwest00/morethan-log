@@ -10,6 +10,15 @@ import { TPosts } from "src/types"
  * @param {{ includePages: boolean }} - false: posts only / true: include pages
  */
 
+export function getBlockValue(block: any, id: string) {
+  const b = block?.[id]
+  if (!b) return undefined
+  const v = b.value
+  // Notion API가 { role, value: { role, value: BlockData } } 형태로 변경된 경우 처리
+  if (v && typeof v === "object" && "value" in v) return v.value
+  return v
+}
+
 // TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
 export const getPosts = async () => {
   let id = CONFIG.notionConfig.pageId as string
@@ -21,7 +30,7 @@ export const getPosts = async () => {
   const block = response.block
   const schema = collection?.schema
 
-  const rawMetadata = block[id].value
+  const rawMetadata = getBlockValue(block, id)
 
   // Check Type
   if (
@@ -32,23 +41,13 @@ export const getPosts = async () => {
   } else {
     // Construct Data
     const pageIds = getAllPageIds(response)
-    console.log("[DEBUG] pageIds:", pageIds)
-    console.log("[DEBUG] collection_query keys:", JSON.stringify(Object.keys(response.collection_query || {})))
-    const firstView = Object.values(response.collection_query || {})[0]
-    console.log("[DEBUG] first view keys:", JSON.stringify(Object.keys(firstView || {})))
-    const firstViewData = Object.values(firstView || {})[0] as any
-    console.log("[DEBUG] first view data keys:", JSON.stringify(Object.keys(firstViewData || {})))
     const data = []
     for (let i = 0; i < pageIds.length; i++) {
       const id = pageIds[i]
       const properties = (await getPageProperties(id, block, schema)) || null
-      // Add fullwidth, createdtime to properties
-      properties.createdTime = new Date(
-        block[id].value?.created_time
-      ).toString()
-      properties.fullWidth =
-        (block[id].value?.format as any)?.page_full_width ?? false
-
+      const blockValue = getBlockValue(block, id)
+      properties.createdTime = new Date(blockValue?.created_time).toString()
+      properties.fullWidth = (blockValue?.format as any)?.page_full_width ?? false
       data.push(properties)
     }
 
