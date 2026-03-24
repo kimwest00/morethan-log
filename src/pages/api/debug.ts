@@ -20,10 +20,11 @@ export default async function handler(
     res.json({
       rawId,
       uuidId,
-      blockKeySample: blockKeys,
       blockKeyCount: Object.keys(block).length,
-      targetBlockExists: !!targetBlock,
+      targetBlockRole: targetBlock?.role,
+      targetBlockValueKeys: Object.keys(targetBlock?.value || {}),
       targetBlockType: targetBlock?.value?.type,
+      targetBlockParentTable: targetBlock?.value?.parent_table,
     })
   } catch (err: any) {
     res.status(500).json({ error: err.message })
