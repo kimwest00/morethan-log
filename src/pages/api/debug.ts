@@ -17,14 +17,14 @@ export default async function handler(
     const blockKeys = Object.keys(block).slice(0, 5)
     const targetBlock = block[uuidId]
 
+    const val = (targetBlock as any)?.value
     res.json({
-      rawId,
       uuidId,
-      blockKeyCount: Object.keys(block).length,
-      targetBlockRole: targetBlock?.role,
-      targetBlockValueKeys: Object.keys(targetBlock?.value || {}),
-      targetBlockType: targetBlock?.value?.type,
-      targetBlockParentTable: targetBlock?.value?.parent_table,
+      layer1Keys: Object.keys(targetBlock || {}),
+      layer2Keys: Object.keys(val || {}),
+      layer3Keys: Object.keys(val?.value || {}),
+      typeAtLayer2: val?.type,
+      typeAtLayer3: val?.value?.type,
     })
   } catch (err: any) {
     res.status(500).json({ error: err.message })
