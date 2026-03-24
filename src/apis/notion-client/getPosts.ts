@@ -32,6 +32,12 @@ export const getPosts = async () => {
   } else {
     // Construct Data
     const pageIds = getAllPageIds(response)
+    console.log("[DEBUG] pageIds:", pageIds)
+    console.log("[DEBUG] collection_query keys:", JSON.stringify(Object.keys(response.collection_query || {})))
+    const firstView = Object.values(response.collection_query || {})[0]
+    console.log("[DEBUG] first view keys:", JSON.stringify(Object.keys(firstView || {})))
+    const firstViewData = Object.values(firstView || {})[0] as any
+    console.log("[DEBUG] first view data keys:", JSON.stringify(Object.keys(firstViewData || {})))
     const data = []
     for (let i = 0; i < pageIds.length; i++) {
       const id = pageIds[i]
