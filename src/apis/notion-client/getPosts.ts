@@ -4,20 +4,8 @@ import { idToUuid } from "notion-utils"
 
 import getAllPageIds from "src/libs/utils/notion/getAllPageIds"
 import getPageProperties from "src/libs/utils/notion/getPageProperties"
+import { getBlockValue } from "src/libs/utils/notion/getBlockValue"
 import { TPosts } from "src/types"
-
-/**
- * @param {{ includePages: boolean }} - false: posts only / true: include pages
- */
-
-export function getBlockValue(block: any, id: string) {
-  const b = block?.[id]
-  if (!b) return undefined
-  const v = b.value
-  // Notion API가 { role, value: { role, value: BlockData } } 형태로 변경된 경우 처리
-  if (v && typeof v === "object" && "value" in v) return v.value
-  return v
-}
 
 // TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
 export const getPosts = async () => {

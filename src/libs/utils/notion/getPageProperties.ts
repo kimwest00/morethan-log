@@ -2,7 +2,7 @@ import { getTextContent, getDateValue } from "notion-utils"
 import { NotionAPI } from "notion-client"
 import { BlockMap, CollectionPropertySchemaMap } from "notion-types"
 import { customMapImageUrl } from "./customMapImageUrl"
-import { getBlockValue } from "src/apis/notion-client/getPosts"
+import { getBlockValue } from "./getBlockValue"
 
 async function getPageProperties(
   id: string,
