@@ -1,40 +1,28 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { CONFIG } from "site.config"
-import { NotionAPI } from "notion-client"
-import { idToUuid } from "notion-utils"
-import getAllPageIds from "src/libs/utils/notion/getAllPageIds"
+import { getPosts } from "src/apis"
+import { filterPosts } from "src/libs/utils/notion"
 
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
   try {
-    let id = CONFIG.notionConfig.pageId as string
-    const api = new NotionAPI()
-    const response = await api.getPage(id)
-    id = idToUuid(id)
-
-    const block = response.block
-    const rawMetadata = block[id]?.value
-
-    const collectionQuery = response.collection_query
-    const firstCollection = Object.values(collectionQuery)[0] as any
-    const firstViewId = Object.keys(firstCollection || {})[0]
-    const firstViewData = firstCollection?.[firstViewId]
-
-    const pageIds = getAllPageIds(response)
+    const posts = await getPosts()
+    const filtered = filterPosts(posts)
 
     res.json({
-      pageType: rawMetadata?.type,
-      collectionQueryKeys: Object.keys(collectionQuery || {}),
-      firstViewId,
-      firstViewDataKeys: Object.keys(firstViewData || {}),
-      collection_group_results: firstViewData?.collection_group_results,
-      blockIds_direct: firstViewData?.blockIds,
-      pageIdsCount: pageIds.length,
-      pageIds,
+      rawPostsCount: posts.length,
+      filteredPostsCount: filtered.length,
+      rawPosts: posts.map((p: any) => ({
+        title: p.title,
+        slug: p.slug,
+        status: p.status,
+        type: p.type,
+        date: p.date,
+        createdTime: p.createdTime,
+      })),
     })
   } catch (err: any) {
-    res.status(500).json({ error: err.message })
+    res.status(500).json({ error: err.message, stack: err.stack })
   }
 }
