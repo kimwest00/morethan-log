@@ -4,8 +4,11 @@ import { idToUuid } from "notion-utils"
 
 import getAllPageIds from "src/libs/utils/notion/getAllPageIds"
 import getPageProperties from "src/libs/utils/notion/getPageProperties"
-import { getBlockValue } from "src/libs/utils/notion/getBlockValue"
 import { TPosts } from "src/types"
+
+/**
+ * @param {{ includePages: boolean }} - false: posts only / true: include pages
+ */
 
 // TODO: react query를 사용해서 처음 불러온 뒤로는 해당데이터만 사용하도록 수정
 export const getPosts = async () => {
@@ -18,7 +21,7 @@ export const getPosts = async () => {
   const block = response.block
   const schema = collection?.schema
 
-  const rawMetadata = getBlockValue(block, id)
+  const rawMetadata = block[id].value
 
   // Check Type
   if (
@@ -33,9 +36,13 @@ export const getPosts = async () => {
     for (let i = 0; i < pageIds.length; i++) {
       const id = pageIds[i]
       const properties = (await getPageProperties(id, block, schema)) || null
-      const blockValue = getBlockValue(block, id)
-      properties.createdTime = new Date(blockValue?.created_time).toString()
-      properties.fullWidth = (blockValue?.format as any)?.page_full_width ?? false
+      // Add fullwidth, createdtime to properties
+      properties.createdTime = new Date(
+        block[id].value?.created_time
+      ).toString()
+      properties.fullWidth =
+        (block[id].value?.format as any)?.page_full_width ?? false
+
       data.push(properties)
     }
 

@@ -19,7 +19,6 @@ export default function getAllPageIds(
       view?.collection_group_results?.blockIds?.forEach((id: ID) =>
         pageSet.add(id)
       )
-      view?.blockIds?.forEach((id: ID) => pageSet.add(id))
     })
     pageIds = [...pageSet]
   }
